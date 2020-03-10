@@ -1,0 +1,15 @@
+mysql:
+  base:
+    addr: 10.58.150.5
+    port: 3306
+    user: puppy
+    pass: 123456
+  database: xgface
+redis:
+    base:
+      addr: localhost
+      port: 6379
+    max-idle: 1
+    idle-timeout: 60
+    max-active: 10
+    timeout: 10
