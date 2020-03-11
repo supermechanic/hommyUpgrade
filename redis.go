@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/garyburd/redigo/redis"
-	"time"
 	"fmt"
+	"time"
+
+	"github.com/garyburd/redigo/redis"
 )
 
 //RedisClient redis连接池对象
@@ -34,5 +35,5 @@ func init() {
 			return con, nil
 		},
 	}
-	fmt.Printf("%+v\n",RedisClient)
+	fmt.Printf("%+v\n", RedisClient)
 }
