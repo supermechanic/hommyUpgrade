@@ -13,3 +13,14 @@ redis:
     idle-timeout: 60
     max-active: 10
     timeout: 10
+xgface:
+  base:
+    addr:
+    port:
+index:
+  base:
+    addr:
+    port:
+imgbasepath: /home/mechanic/image
+faceimgpath: /camera/face/
+img_server: http://10.58.150.2/cameraimages

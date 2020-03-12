@@ -32,10 +32,22 @@ type mredis struct {
 	IdleTimeout int     `yaml:"idle-timeout"`
 	Timeout     int     `yaml:"timeout"`
 }
+type xgface struct {
+	Base service `yaml:"base"`
+}
+
+type index struct {
+	Base service `yaml:"base"`
+}
 
 type config struct {
-	Mysql mysql  `yaml:"mysql"`
-	Redis mredis `yaml:"redis"`
+	Mysql  mysql  `yaml:"mysql"`
+	Redis  mredis `yaml:"redis"`
+	XGFace xgface `yaml:"xgface"`
+	Index  index  `yaml:"index"`
+	BasePath string `yaml:"imgbasepath"`
+	FacePath string `yaml:"faceimgpath"`
+	ImgServer string `yaml:"img_server"`
 }
 
 func init() {
