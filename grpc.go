@@ -1,16 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"google.golang.org/grpc"
 )
+
 var xgfaceAddr, xgindexAddr string
-func init()  {
+
+func init() {
 	xgfaceAddr = Config.XGFace.Base.Address + ":" + Config.XGFace.Base.Port
 	xgindexAddr = Config.Index.Base.Address + ":" + Config.Index.Base.Port
+	fmt.Println("xgface", xgfaceAddr)
+	fmt.Println("index", xgindexAddr)
 }
+
 var xgFaceConn, xgIndexConn *grpc.ClientConn
+
 func newXgFaceConn() (*grpc.ClientConn, error) {
 	if xgFaceConn == nil {
 		lock.Lock()

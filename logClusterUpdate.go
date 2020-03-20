@@ -8,9 +8,12 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"strings"
+	"time"
 
 	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 
 	"github.com/garyburd/redigo/redis"
 	"github.com/golang/glog"
@@ -18,10 +21,19 @@ import (
 
 var (
 	stage int
+	threshhold float64
 )
+
+const deadline = 60
 
 func init() {
 	flag.IntVar(&stage, "stage", 0, "execute stage")
+	flag.Float64Var(&threshhold, "threshhold", 0.7, "index threshhold")
+	xgfaceAddr = Config.XGFace.Base.Address + ":" + Config.XGFace.Base.Port
+	xgindexAddr = Config.Index.Base.Address + ":" + Config.Index.Base.Port
+	fmt.Println("xgface", xgfaceAddr)
+	fmt.Println("index", xgindexAddr)
+
 }
 
 type logInfo struct {
@@ -33,7 +45,7 @@ type logInfo struct {
 }
 
 func logTableNames() (tables []string, err error) {
-	rows, err := GormDb.Raw("select table_name from information_schema.tables where table_schema='xgface' and table_name like 'log_20';").Rows()
+	rows, err := GormDb.Raw("select table_name from information_schema.tables where table_schema='xgface' and table_name like 'log_20%';").Rows()
 	if err != nil {
 		glog.Errorln(err)
 		return
@@ -55,7 +67,7 @@ func getAllImageWithTime() (err error) {
 		return
 	}
 	glog.Info("日志表", tableNames)
-	SQLFormat := "select %s.id, %s.name as image_path, %s.cluster_id, %s.time from %s left join %s on %s.id = %s.face_img_id order by time limit %d, %d;"
+	SQLFormat := "select %s.id, %s.path as image_path, %s.cluster_id, %s.time from %s left join %s on %s.id = %s.face_img_id order by time limit %d, %d;"
 	var querySQL string
 	for _, tableName := range tableNames {
 		countSQL := "select count(*) from " + tableName + ";"
@@ -92,15 +104,15 @@ func getAllImageWithTime() (err error) {
 	}
 	return
 }
-func getBase64ImageFromFile(path string) (imageData string, err error) {
+func getBase64ImageFromFile(path string) (string, error) {
 	realPath := Config.BasePath + strings.TrimPrefix(path, Config.ImgServer)
 	data, err := ioutil.ReadFile(realPath)
 	if err != nil {
-		glog.Errorf("did not open file: %s\n", realPath)
-		return
+		glog.Errorf("can not open file: %s\n", realPath)
+		return "", err
 	}
-	imageData = base64.StdEncoding.EncodeToString(data)
-	return
+	imageData := base64.StdEncoding.EncodeToString(data)
+	return imageData, nil
 }
 
 func updateLogClusterID(table string, id uint32, newCID int32) error {
@@ -115,16 +127,17 @@ func updateLogClusterID(table string, id uint32, newCID int32) error {
 //UpdateClusterID 更新index中的ID
 func UpdateClusterID() (err error) {
 	r := RedisClient.Get()
-	xgfaceConn, err := GetXgFaceConn()
+	xgfaceConn, err := grpc.Dial(xgfaceAddr, grpc.WithInsecure(), grpc.WithTimeout(time.Duration(deadline)*time.Second))
 	if err != nil {
-		glog.Errorln(err)
-		return
+		log.Fatalf("xgface did not connect: %v", err)
 	}
-	indexConn, err := GetXgIndexConn()
+	defer xgfaceConn.Close()
+
+	indexConn, err := grpc.Dial(xgindexAddr, grpc.WithInsecure(), grpc.WithTimeout(time.Duration(deadline)*time.Second))
 	if err != nil {
-		glog.Errorln(err)
-		return
+		log.Fatalf("index did not connect: %v", err)
 	}
+	defer indexConn.Close()
 	xgfaceClient := pbface.NewXgfaceServiceClient(xgfaceConn)
 	indexClient := pbindex.NewIndexServiceClient(indexConn)
 	count := 0
@@ -142,33 +155,54 @@ func UpdateClusterID() (err error) {
 		}
 		Base64Content, err := getBase64ImageFromFile(rec.ImagePath)
 		if err != nil {
+			glog.Errorln(err)
 			r.Do("LPUSH", "imageData", value)
-			glog.Errorf("image %s failed and resend to redis", rec.ImagePath)
+			glog.Infof("image %s failed and resend to redis", rec.ImagePath)
 			continue
 		}
-		detectInfo, err := xgfaceClient.GetDetectInfo(context.Background(), &pbface.Request{Images: []string{Base64Content}})
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		detectInfo, err := xgfaceClient.GetDetectInfo(ctx, &pbface.Request{Images: []string{Base64Content}})
 		if err != nil {
+			glog.Errorln(err)
 			r.Do("LPUSH", "imageData", value)
-			glog.Errorf("image %s failed and resend to redis", rec.ImagePath)
+			glog.Infof("image %s failed and resend to redis", rec.ImagePath)
 			continue
 		}
 		if len(detectInfo.Faces) == 0 {
 			glog.Errorf("image %s failed detect no face", rec.ImagePath)
 			err1 := updateLogClusterID(rec.Table, rec.ID, 0)
 			if err1 != nil {
-				glog.Errorln("更新失败", rec)
-				glog.Errorln("newCID------------", 0)
+				glog.Infoln("更新失败", rec, err1)
+				glog.Infoln("newCID------------", 0)
 			}
 			continue
+		}else {
+			glog.Infof("image %s failed detect %d face", rec.ImagePath, len(detectInfo.Faces))
 		}
-		cluster, err := indexClient.InsertPoint(context.Background(), &pbindex.Feature{Value: detectInfo.Faces[0].Feature.Values})
-		if err != nil {
-			glog.Errorf("image %s insert index failed", rec.ImagePath)
-			continue
+		var newClusterID int32
+		resp, err := indexClient.FindWithThreshhold(ctx, &pbindex.Request{
+			Feature:&pbindex.Feature{Value: detectInfo.Faces[0].Feature.Values},
+			Threshhold: float32(threshhold),
+		})
+		if len(resp.Cids) == 0 {
+			cluster, err := indexClient.InsertIndexPoint(ctx, &pbindex.Feature{Value: detectInfo.Faces[0].Feature.Values})
+			if err != nil {
+				glog.Errorln(err)
+				glog.Infof("image %s insert index failed", rec.ImagePath)
+				continue
+			}else {
+				newClusterID = cluster.Id
+			}
+		}else {
+			newClusterID = resp.Cids[0]
 		}
-		if err = updateLogClusterID(rec.Table, rec.ID, cluster.Id); err != nil {
-			glog.Errorln("更新失败", rec)
-			glog.Errorln("newCID------------", cluster.Id)
+		
+		cancel()
+		if err = updateLogClusterID(rec.Table, rec.ID, newClusterID); err != nil {
+			glog.Infoln("更新失败", rec, err)
+			glog.Infoln("newCID------------", newClusterID)
+		}else {
+			glog.Infof("更新成功,ID%d, cluter_id:%d\n", rec.ID, newClusterID)
 		}
 		count++
 	}
@@ -198,5 +232,6 @@ func main() {
 			return
 		}
 	}
+	glog.Infoln("升级完成")
 	return
 }

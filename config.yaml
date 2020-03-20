@@ -1,7 +1,7 @@
 mysql:
   base:
-    addr: 10.58.150.5
-    port: 3306
+    addr: 10.58.150.2
+    port: 13306
     user: puppy
     pass: 123456
   database: xgface
@@ -15,12 +15,12 @@ redis:
     timeout: 10
 xgface:
   base:
-    addr:
-    port:
+    addr: 10.58.150.2
+    port: 50000
 index:
   base:
-    addr:
-    port:
+    addr: 10.58.150.2
+    port: 50001
 imgbasepath: /home/mechanic/image
 faceimgpath: /camera/face/
 img_server: http://10.58.150.2/cameraimages

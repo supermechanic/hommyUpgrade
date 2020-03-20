@@ -1,0 +1,70 @@
+Log file created at: 2020/03/14 11:20:54
+Running on machine: mechanic-OMEN-by-HP-Laptop
+Binary: Built with gc go1.12.5 for linux/amd64
+Log line format: [IWEF]mmdd hh:mm:ss.uuuuuu threadid file:line] msg
+I0314 11:20:54.039411   13937 logClusterUpdate.go:57] 日志表[log_202002 log_202003 log_202004 log_202005 log_202006 log_202007 log_202008 log_202009 log_202010 log_202011 log_202012 log_202101 log_202102 log_202103 log_202104 log_202105 log_202106 log_202107 log_202108 log_202109 log_202110 log_202111 log_202112 log_202201 log_202202 log_202203 log_202204 log_202205 log_202206 log_202207 log_202208 log_202209 log_202210 log_202211 log_202212 log_202301 log_202302 log_202303 log_202304 log_202305 log_202306 log_202307 log_202308 log_202309 log_202310 log_202311 log_202312 log_202401 log_202402 log_202403 log_202404 log_202405 log_202406 log_202407 log_202408 log_202409 log_202410 log_202411 log_202412]
+I0314 11:20:54.041459   13937 logClusterUpdate.go:65] table log_202002 has 1 record
+I0314 11:20:54.043700   13937 logClusterUpdate.go:90] table log_202002 send 1 message
+I0314 11:20:54.045089   13937 logClusterUpdate.go:65] table log_202003 has 1 record
+I0314 11:20:54.046825   13937 logClusterUpdate.go:90] table log_202003 send 1 message
+I0314 11:20:54.048707   13937 logClusterUpdate.go:65] table log_202004 has 1 record
+I0314 11:20:54.050603   13937 logClusterUpdate.go:90] table log_202004 send 1 message
+I0314 11:20:54.052008   13937 logClusterUpdate.go:65] table log_202005 has 1 record
+I0314 11:20:54.053732   13937 logClusterUpdate.go:90] table log_202005 send 1 message
+I0314 11:20:54.055295   13937 logClusterUpdate.go:65] table log_202006 has 1 record
+I0314 11:20:54.057026   13937 logClusterUpdate.go:90] table log_202006 send 1 message
+I0314 11:20:54.058375   13937 logClusterUpdate.go:65] table log_202007 has 0 record
+I0314 11:20:54.059770   13937 logClusterUpdate.go:65] table log_202008 has 0 record
+I0314 11:20:54.061303   13937 logClusterUpdate.go:65] table log_202009 has 0 record
+I0314 11:20:54.062892   13937 logClusterUpdate.go:65] table log_202010 has 0 record
+I0314 11:20:54.064530   13937 logClusterUpdate.go:65] table log_202011 has 0 record
+I0314 11:20:54.066021   13937 logClusterUpdate.go:65] table log_202012 has 0 record
+I0314 11:20:54.067498   13937 logClusterUpdate.go:65] table log_202101 has 0 record
+I0314 11:20:54.068976   13937 logClusterUpdate.go:65] table log_202102 has 0 record
+I0314 11:20:54.070367   13937 logClusterUpdate.go:65] table log_202103 has 0 record
+I0314 11:20:54.072049   13937 logClusterUpdate.go:65] table log_202104 has 0 record
+I0314 11:20:54.073679   13937 logClusterUpdate.go:65] table log_202105 has 0 record
+I0314 11:20:54.074970   13937 logClusterUpdate.go:65] table log_202106 has 0 record
+I0314 11:20:54.077260   13937 logClusterUpdate.go:65] table log_202107 has 0 record
+I0314 11:20:54.078730   13937 logClusterUpdate.go:65] table log_202108 has 0 record
+I0314 11:20:54.080235   13937 logClusterUpdate.go:65] table log_202109 has 0 record
+I0314 11:20:54.082594   13937 logClusterUpdate.go:65] table log_202110 has 0 record
+I0314 11:20:54.084002   13937 logClusterUpdate.go:65] table log_202111 has 0 record
+I0314 11:20:54.086551   13937 logClusterUpdate.go:65] table log_202112 has 0 record
+I0314 11:20:54.087939   13937 logClusterUpdate.go:65] table log_202201 has 0 record
+I0314 11:20:54.089207   13937 logClusterUpdate.go:65] table log_202202 has 0 record
+I0314 11:20:54.090601   13937 logClusterUpdate.go:65] table log_202203 has 0 record
+I0314 11:20:54.091947   13937 logClusterUpdate.go:65] table log_202204 has 0 record
+I0314 11:20:54.093260   13937 logClusterUpdate.go:65] table log_202205 has 0 record
+I0314 11:20:54.094578   13937 logClusterUpdate.go:65] table log_202206 has 0 record
+I0314 11:20:54.095969   13937 logClusterUpdate.go:65] table log_202207 has 0 record
+I0314 11:20:54.097376   13937 logClusterUpdate.go:65] table log_202208 has 0 record
+I0314 11:20:54.098865   13937 logClusterUpdate.go:65] table log_202209 has 0 record
+I0314 11:20:54.100238   13937 logClusterUpdate.go:65] table log_202210 has 0 record
+I0314 11:20:54.101532   13937 logClusterUpdate.go:65] table log_202211 has 0 record
+I0314 11:20:54.102915   13937 logClusterUpdate.go:65] table log_202212 has 0 record
+I0314 11:20:54.104208   13937 logClusterUpdate.go:65] table log_202301 has 0 record
+I0314 11:20:54.105454   13937 logClusterUpdate.go:65] table log_202302 has 0 record
+I0314 11:20:54.106757   13937 logClusterUpdate.go:65] table log_202303 has 0 record
+I0314 11:20:54.108279   13937 logClusterUpdate.go:65] table log_202304 has 0 record
+I0314 11:20:54.109564   13937 logClusterUpdate.go:65] table log_202305 has 0 record
+I0314 11:20:54.110931   13937 logClusterUpdate.go:65] table log_202306 has 0 record
+I0314 11:20:54.112217   13937 logClusterUpdate.go:65] table log_202307 has 0 record
+I0314 11:20:54.113607   13937 logClusterUpdate.go:65] table log_202308 has 0 record
+I0314 11:20:54.115007   13937 logClusterUpdate.go:65] table log_202309 has 0 record
+I0314 11:20:54.116381   13937 logClusterUpdate.go:65] table log_202310 has 0 record
+I0314 11:20:54.118602   13937 logClusterUpdate.go:65] table log_202311 has 0 record
+I0314 11:20:54.120012   13937 logClusterUpdate.go:65] table log_202312 has 0 record
+I0314 11:20:54.121224   13937 logClusterUpdate.go:65] table log_202401 has 0 record
+I0314 11:20:54.122585   13937 logClusterUpdate.go:65] table log_202402 has 0 record
+I0314 11:20:54.123816   13937 logClusterUpdate.go:65] table log_202403 has 0 record
+I0314 11:20:54.125085   13937 logClusterUpdate.go:65] table log_202404 has 0 record
+I0314 11:20:54.126333   13937 logClusterUpdate.go:65] table log_202405 has 0 record
+I0314 11:20:54.127721   13937 logClusterUpdate.go:65] table log_202406 has 0 record
+I0314 11:20:54.129143   13937 logClusterUpdate.go:65] table log_202407 has 0 record
+I0314 11:20:54.130649   13937 logClusterUpdate.go:65] table log_202408 has 0 record
+I0314 11:20:54.132054   13937 logClusterUpdate.go:65] table log_202409 has 0 record
+I0314 11:20:54.133394   13937 logClusterUpdate.go:65] table log_202410 has 0 record
+I0314 11:20:54.134786   13937 logClusterUpdate.go:65] table log_202411 has 0 record
+I0314 11:20:54.136084   13937 logClusterUpdate.go:65] table log_202412 has 0 record
+I0314 11:20:54.136088   13937 logClusterUpdate.go:201] 升级完成

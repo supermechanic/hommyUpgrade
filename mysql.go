@@ -52,7 +52,7 @@ func newGorm() (*gorm.DB, error) {
 		}
 		GormDb.DB().SetMaxIdleConns(0)
 		GormDb.DB().SetMaxOpenConns(100)
-		GormDb.LogMode(true)
+		GormDb.LogMode(false)
 	}
 
 	return GormDb, err
